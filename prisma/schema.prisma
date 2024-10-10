@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  authId    String   @unique
+  email     String?  @unique
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  logs      Log[]
+  tags      Tag[]
+
+  @@map("users")
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  dayNumber Int
+  dayStatus String
+  entries   Entry[]
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("logs")
+}
+
+model Entry {
+  id     String  @id @default(cuid())
+  title  String
+  report String
+  rating Int     @default(0)
+  tagId  String?
+  tag    Tag?    @relation(fields: [tagId], references: [id])
+  logId  String
+  log    Log     @relation(fields: [logId], references: [id])
+
+  @@map("entries")
+}
+
+model Tag {
+  id      String  @id @default(cuid())
+  tagName String
+  entries Entry[]
+  userId  String
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@map("tags")
+}

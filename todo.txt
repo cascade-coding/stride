@@ -1,0 +1,7 @@
+
+
+[-] a log table with id, created_at, day number, day status
+    [-] an entry table connected with a the log table with fields of title, report, rating 0-10, tag 
+        [-] a tag table with the fields of id, tag_name and connected with entry
+
+
