@@ -3,36 +3,23 @@
 import prisma from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 
-async function getOrCreateLog() {
-  try {
-    const today = new Date();
+/*
+ 
+! craete the latest log or get the latest one
 
+*/
+async function getOrCreateLog({ today, now }: { today: string; now: string }) {
+  try {
     const authUser = await currentUser();
 
     if (!authUser) return { errorMessage: "something went wrong" };
 
     const authId = authUser.id;
 
-    const startOfDay = new Date(
-      Date.UTC(
-        today.getUTCFullYear(),
-        today.getUTCMonth(),
-        today.getUTCDate(),
-        0,
-        0,
-        0
-      )
-    );
-    const endOfDay = new Date(
-      Date.UTC(
-        today.getUTCFullYear(),
-        today.getUTCMonth(),
-        today.getUTCDate(),
-        23,
-        59,
-        59
-      )
-    );
+    const startOfDay = new Date(`${today}T00:00:00.000Z`); // Start of the day in UTC
+    const endOfDay = new Date(`${today}T23:59:59.999Z`);
+
+    const dateTime = new Date(`${now}Z`); // Add 'Z' to indicate it's in UTC
 
     const user = await prisma.user.findFirst({
       where: {
@@ -77,6 +64,7 @@ async function getOrCreateLog() {
           dayNumber: logCount + 1, // Increment day number by 1
           dayStatus: "Good",
           userId: userId, // Associate with the current user
+          createdAt: dateTime,
         },
         include: {
           entries: {
@@ -97,24 +85,53 @@ async function getOrCreateLog() {
   }
 }
 
-async function updateStatus({
-  logId,
-  value,
+/*
+ 
+! fetch all the previous logs for an user
+
+*/
+async function previousLogs({
+  page = 1,
+  limit = 2,
+  today,
 }: {
-  logId: string;
-  value: string;
+  page: number;
+  limit?: number;
+  today: string;
 }) {
   try {
     const authUser = await currentUser();
 
     if (!authUser) return { errorMessage: "something went wrong" };
 
-    const updatedLog = await prisma.log.update({
+    const user = await prisma.user.findFirst({
       where: {
-        id: logId,
+        authId: authUser.id,
       },
-      data: {
-        dayStatus: value,
+    });
+
+    if (!user) return { errorMessage: "something went wrong" };
+
+    const { id: userId } = user;
+
+    const skip = (page - 1) * limit; // number of records to skip
+    const take = limit; // number of records to take
+
+    const startOfDay = new Date(`${today}T00:00:00.000Z`); // Start of the day in UTC
+    const endOfDay = new Date(`${today}T23:59:59.999Z`);
+
+    const logs = await prisma.log.findMany({
+      skip: skip,
+      take: take,
+      where: {
+        userId,
+
+        NOT: {
+          createdAt: {
+            lte: endOfDay,
+            gt: startOfDay,
+          },
+        },
       },
       include: {
         entries: {
@@ -123,22 +140,34 @@ async function updateStatus({
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
+    const totalLogs = await prisma.log.count({
+      where: {
+        userId,
+      },
+    }); // count total logs for pagination metadata
+
+    const serializedLogs = logs.map((log) => ({
+      ...log,
+      createdAt: log.createdAt.toISOString(), // Convert Date to string
+    }));
+
     return {
-      ...updatedLog,
-      createdAt: new Date(updatedLog.createdAt).toISOString(),
+      logs: serializedLogs,
+      meta: {
+        totalLogs,
+        currentPage: page,
+        totalPages: Math.ceil(totalLogs / limit),
+      },
     };
-
-    console.log({ updatedLog });
-
-    console.log({ logId });
-
-    console.log({ updated: value });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return { errorMessage: "something went wrong" };
   }
 }
 
-export { getOrCreateLog, updateStatus };
+export { getOrCreateLog, previousLogs };

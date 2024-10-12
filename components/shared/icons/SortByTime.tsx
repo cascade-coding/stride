@@ -14,8 +14,8 @@ const SortByTime = ({ className = "", fillColor = "" }) => {
           opacity="0.5"
           d="M13.3341 9.33325H2.66748"
           className={cn("stroke-muted-foreground", fillColor)}
-          stroke-width="2"
-          stroke-linecap="round"
+          strokeWidth="2"
+          strokeLinecap="round"
         />
         <path
           opacity="0.5"

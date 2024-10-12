@@ -9,7 +9,7 @@ import { statusType } from "@/lib/types";
 const LogEditor = () => {
   const { latestLog: log } = useLoadStateData();
 
-  if (!log) return <>yyy</>;
+  if (!log) return <></>;
 
   return (
     <>

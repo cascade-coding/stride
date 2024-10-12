@@ -1,4 +1,4 @@
-import { updateStatus } from "@/app/actions/log/log";
+import { updateStatus } from "@/app/actions/log/edit";
 import { useAppDispatch } from "../hooks";
 import { updateLog } from "../features/log/logSlice";
 
