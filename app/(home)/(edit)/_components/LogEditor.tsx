@@ -1,13 +1,17 @@
 "use client";
 
-import useLoadStateData from "@/lib/hooks/useLoadStateData";
+// import useLoadStateData from "@/lib/hooks/useLoadStateData";
 import React from "react";
 import LogInfo from "./LogInfo";
 import StatusButton from "./StatusButton";
 import { statusType } from "@/lib/types";
+import { useAppSelector } from "@/lib/hooks";
 
 const LogEditor = () => {
-  const { latestLog: log } = useLoadStateData();
+  // const { latestLog: log } = useLoadStateData();
+  const log = useAppSelector((state) =>
+    state.log.logs.find((log) => log.latest === true)
+  );
 
   if (!log) return <></>;
 

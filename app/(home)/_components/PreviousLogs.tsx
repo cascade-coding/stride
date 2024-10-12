@@ -1,22 +1,24 @@
 import React from "react";
 import SidebarLabel from "./SidebarLabel";
-import useLoadStateData from "@/lib/hooks/useLoadStateData";
+import SidebarLogCard from "./SidebarLogCard";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAppSelector } from "@/lib/hooks";
 
 const PreviousLogs = () => {
-  const { previousLogs: logs } = useLoadStateData();
+  const logs = useAppSelector((state) =>
+    state.log.logs.filter((log) => log.latest !== true)
+  );
   return (
     <div>
       <div>
         <SidebarLabel text="Logs" />
       </div>
 
-      <div>
+      <ScrollArea className="mt-3 h-[300px]">
         {logs.map((log) => (
-          <>
-            <h4>{log.dayNumber}</h4>
-          </>
+          <SidebarLogCard key={log.id} />
         ))}
-      </div>
+      </ScrollArea>
     </div>
   );
 };

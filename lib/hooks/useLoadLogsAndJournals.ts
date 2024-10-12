@@ -1,5 +1,5 @@
 import { getOrCreateLog, previousLogs } from "@/app/actions/log/read";
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   addLogs,
   setLatestLog,
@@ -7,12 +7,13 @@ import {
   updatePageNumber,
   updateTotalPageNumber,
 } from "../features/log/logSlice";
-import useLoadStateData from "./useLoadStateData";
 import { getDateTime } from "../services";
 
 function useLoadLogsAndJournals() {
   const dispatch = useAppDispatch();
-  const { logPageNumber, logPageEnded } = useLoadStateData();
+
+  const logPageNumber = useAppSelector((state) => state.log.pageNumber);
+  const logPageEnded = useAppSelector((state) => state.log.pageEnded);
 
   const getLatestLog = async () => {
     const { today, now } = getDateTime();

@@ -7,12 +7,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import SidebarContent from "./SidebarContent";
 import SidebarMenu from "@/components/shared/icons/SidebarMenu";
 import useInitialUserData from "@/lib/hooks/useInitialUserData";
-import useLoadStateData from "@/lib/hooks/useLoadStateData";
 import SidebarSkeleton from "./SidebarSkeleton";
+import { useAppSelector } from "@/lib/hooks";
 
 const Sidebar = ({ sheet = true }: { sheet?: boolean }) => {
   useInitialUserData();
-  const { logInitialLoading } = useLoadStateData();
+  const logInitialLoading = useAppSelector((state) => state.log.initialLoading);
 
   return (
     <>

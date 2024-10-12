@@ -134,9 +134,14 @@ body {
   }
 }
 
+/* ! scroll bar reset  */
+
+/* ! custom classes */
 .statusGradient {
   background: var(--gradient-1);
 }
+
+/* ! clerk css */
 
 .cl-card {
   background: hsl(var(--card));
