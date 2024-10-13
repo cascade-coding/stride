@@ -4,10 +4,17 @@ import TopActoins from "./TopActoins";
 import SearchAndFilter from "./SearchAndFilter";
 import PreviousLogs from "./PreviousLogs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import SidebarLabel from "./SidebarLabel";
 
 const SidebarContent = () => {
   return (
-    <ScrollArea className="h-dvh sidebar-content">
+    <ScrollArea className="h-dvh">
       <TopHeader />
       <div className="mt-8 px-2">
         <TopActoins />
@@ -18,12 +25,23 @@ const SidebarContent = () => {
       </div>
 
       <div className="mt-4 px-2">
-      <PreviousLogs />
-      </div>
+        <Accordion type="multiple" defaultValue={["journals"]}>
+          <AccordionItem value="logs" className="border-none">
+            <AccordionTrigger className="hover:no-underline">
+              <SidebarLabel text="Logs" />
+            </AccordionTrigger>
+            <AccordionContent>
+              <PreviousLogs />
+            </AccordionContent>
+          </AccordionItem>
 
-      <div className="mt-4 max-h-[300px] overflow-y-auto">
-        journals
-        <PreviousLogs />
+          <AccordionItem value="journals" className="border-none">
+            <AccordionTrigger className="hover:no-underline">
+              <SidebarLabel text="Journals" />
+            </AccordionTrigger>
+            <AccordionContent>All the journals here....</AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </ScrollArea>
   );

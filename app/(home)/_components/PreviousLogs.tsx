@@ -1,23 +1,30 @@
 import React from "react";
-import SidebarLabel from "./SidebarLabel";
 import SidebarLogCard from "./SidebarLogCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAppSelector } from "@/lib/hooks";
+import { selectPreviousLogs } from "@/lib/selectors";
+import { cn } from "@/lib/utils";
+import useLoadMoreLogs from "@/lib/hooks/useLoadMoreLogs";
 
 const PreviousLogs = () => {
-  const logs = useAppSelector((state) =>
-    state.log.logs.filter((log) => log.latest !== true)
-  );
+  const logs = useAppSelector(selectPreviousLogs);
+
+  const inViewRef = useLoadMoreLogs();
+
   return (
     <div>
-      <div>
-        <SidebarLabel text="Logs" />
-      </div>
-
-      <ScrollArea className="mt-3 h-[300px]">
+      <ScrollArea
+        className={cn(
+          "h-[120px]",
+          logs.length === 1 && "h-[80px]",
+          logs.length >= 3 && "h-[200px]"
+        )}
+      >
         {logs.map((log) => (
           <SidebarLogCard key={log.id} />
         ))}
+
+        <div className="-mt-3 h-2 bg-transparent" ref={inViewRef} />
       </ScrollArea>
     </div>
   );

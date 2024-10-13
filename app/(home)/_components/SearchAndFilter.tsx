@@ -8,19 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown } from "lucide-react";
-import useLoadLogsAndJournals from "@/lib/hooks/useLoadLogsAndJournals";
 
 const SearchAndFilter = () => {
-  const { getPreviousLogs } = useLoadLogsAndJournals();
-
   return (
     <div>
-      <div
-        className="flex items-center gap-x-2 bg-card p-1 rounded-sm"
-        onClick={async () => {
-          await getPreviousLogs();
-        }}
-      >
+      <div className="flex items-center gap-x-2 bg-card p-1 rounded-sm">
         <Input
           type="text"
           placeholder="Search logs by day or content"
