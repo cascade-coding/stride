@@ -9,6 +9,7 @@ interface logState {
   totalPageNumber: number;
   pageEnded: boolean;
   initialLoading: boolean;
+  showLogId: string | null;
 }
 
 // Define the initial state using that type
@@ -18,6 +19,7 @@ const initialState: logState = {
   totalPageNumber: 1,
   pageEnded: false,
   initialLoading: true,
+  showLogId: null,
 };
 
 export const logSlice = createSlice({
@@ -63,6 +65,10 @@ export const logSlice = createSlice({
     setInitialLoading: (state, action: PayloadAction<boolean>) => {
       state.initialLoading = action.payload;
     },
+
+    setShowLogId: (state, action: PayloadAction<string | null>) => {
+      state.showLogId = action.payload;
+    },
   },
 });
 
@@ -75,6 +81,7 @@ export const {
   updateTotalPageNumber,
   updatePageEndedStatus,
   setInitialLoading,
+  setShowLogId,
 } = logSlice.actions;
 
 export const selectLog = (state: RootState) => state.log;

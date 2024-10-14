@@ -21,7 +21,7 @@ const PreviousLogs = () => {
         )}
       >
         {logs.map((log) => (
-          <SidebarLogCard key={log.id} />
+          <SidebarLogCard key={log.id} log={log}/>
         ))}
 
         <div className="-mt-3 h-2 bg-transparent" ref={inViewRef} />

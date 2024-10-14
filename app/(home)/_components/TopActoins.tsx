@@ -6,13 +6,19 @@ import NoteFavorite from "@/components/shared/icons/NoteFavorite";
 import NoteJournal from "@/components/shared/icons/NoteJournal";
 import LineChart from "@/components/shared/icons/LineChart";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { setShowLogId } from "@/lib/features/log/logSlice";
 
 const TopActoins = () => {
   const router = useRouter();
 
-  const handleNavigate = (path: string) => {
-    router.push(`${path}`);
-  };
+  const dispatch = useAppDispatch();
+
+  const log = useAppSelector((state) =>
+    state.log.logs.find((log) => log.latest === true)
+  );
+
+  if (!log) return <></>;
 
   return (
     <div>
@@ -21,13 +27,16 @@ const TopActoins = () => {
           text="Edit Today’s log"
           Icon={<NoteFavorite className="w-14 h-14 md:w-12 md:h-12" />}
           className="flex-col py-4 md:flex-row md:py-1.5"
-          onClick={() => handleNavigate("/latest-log")}
+          onClick={() => {
+            dispatch(setShowLogId(log.id));
+            router.push(`/edit-log`);
+          }}
         />
         <MainCta
           text="New Journal"
           Icon={<NoteJournal className="w-14 h-14 md:w-12 md:h-12" />}
           className="flex-col py-4 md:flex-row md:py-1.5"
-          onClick={() => handleNavigate("/journal")}
+          onClick={() => router.push(`/journal`)}
         />
       </div>
       <MainCta

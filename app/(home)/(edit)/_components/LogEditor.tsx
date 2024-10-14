@@ -8,9 +8,8 @@ import { statusType } from "@/lib/types";
 import { useAppSelector } from "@/lib/hooks";
 
 const LogEditor = () => {
-  // const { latestLog: log } = useLoadStateData();
   const log = useAppSelector((state) =>
-    state.log.logs.find((log) => log.latest === true)
+    state.log.logs.find((log) => log.id === state.log.showLogId)
   );
 
   if (!log) return <></>;
