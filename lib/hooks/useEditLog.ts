@@ -11,7 +11,7 @@ function useEditLog() {
 
       if ("errorMessage" in log) return;
 
-      dispatch(updateLog({ ...log, latest: true }));
+      dispatch(updateLog({ ...log }));
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {}
   };

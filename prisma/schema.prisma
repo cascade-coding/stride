@@ -27,6 +27,7 @@ model Log {
   dayNumber Int
   dayStatus String
   entries   Entry[]
+  content   String?
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
@@ -37,7 +38,7 @@ model Log {
 model Entry {
   id     String  @id @default(cuid())
   title  String
-  report String
+  report String?
   rating Int     @default(0)
   tagId  String?
   tag    Tag?    @relation(fields: [tagId], references: [id])

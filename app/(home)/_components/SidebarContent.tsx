@@ -1,7 +1,7 @@
 import React from "react";
 import TopHeader from "./TopHeader";
 import TopActoins from "./TopActoins";
-import SearchAndFilter from "./SearchAndFilter";
+import SearchLog from "./SearchLog";
 import PreviousLogs from "./PreviousLogs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -20,7 +20,7 @@ const SidebarContent = () => {
         <TopActoins />
 
         <div className="mt-6">
-          <SearchAndFilter />
+          <SearchLog />
         </div>
       </div>
 

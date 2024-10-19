@@ -18,16 +18,22 @@ function useLoadLogsAndJournals() {
   const getLatestLog = async () => {
     const { today, now } = getDateTime();
 
+    console.log("coolll")
+
     try {
       const log = await getOrCreateLog({ today, now });
 
+      console.log('fuckk xxxxxxxxxxxxxxx')
+
       if ("errorMessage" in log) return null;
+
 
       dispatch(setLatestLog({ ...log, latest: true }));
 
       return { message: "data loaded" };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.log(error)
       return null;
     }
   };

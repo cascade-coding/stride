@@ -121,6 +121,11 @@ async function previousLogs({
     const endOfDay = new Date(`${today}T23:59:59.999Z`);
 
     const logs = await prisma.log.findMany({
+      select: {
+        id: true,
+        dayNumber: true,
+        createdAt: true,
+      },
       skip: skip,
       take: take,
       where: {
@@ -130,13 +135,6 @@ async function previousLogs({
           createdAt: {
             lte: endOfDay,
             gt: startOfDay,
-          },
-        },
-      },
-      include: {
-        entries: {
-          include: {
-            tag: true,
           },
         },
       },
@@ -170,4 +168,56 @@ async function previousLogs({
   }
 }
 
-export { getOrCreateLog, previousLogs };
+/*
+ 
+! get log by id
+
+*/
+async function getLogById({ logId }: { logId: string }) {
+  try {
+    const authUser = await currentUser();
+
+    if (!authUser) return { errorMessage: "something went wrong" };
+
+    const authId = authUser.id;
+
+    const user = await prisma.user.findFirst({
+      where: {
+        authId,
+      },
+    });
+
+    if (!user) return { errorMessage: "something went wrong" };
+
+    const { id: userId } = user;
+
+    // Check if the log for today already exists
+    const existingLog = await prisma.log.findFirst({
+      where: {
+        id: logId,
+        userId: userId,
+      },
+      include: {
+        entries: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+
+    if (existingLog) {
+      return {
+        ...existingLog,
+        createdAt: new Date(existingLog.createdAt).toISOString(),
+      };
+    } else {
+      return { errorMessage: "something went wrong" };
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { errorMessage: "something went wrong" };
+  }
+}
+
+export { getOrCreateLog, previousLogs, getLogById };

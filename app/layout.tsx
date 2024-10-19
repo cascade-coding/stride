@@ -17,10 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <StoreProvider>
-      <ClerkProvider
-        signInFallbackRedirectUrl="/save-user"
-        signUpFallbackRedirectUrl="/save-user"
-      >
+      <ClerkProvider>
         <html lang="en">
           <body className={`antialiased`}>
             <ThemeProvider

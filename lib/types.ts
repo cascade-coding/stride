@@ -2,26 +2,26 @@ export type statusType = "Great" | "Good" | "Average" | "Bad";
 
 export type Tag = {
   id: string;
-  userId: string;
   tagName: string;
+  userId: string;
 } | null;
 
 export type LogEntry = {
-  tag: Tag;
+  tag?: Tag;
   title: string;
   id: string;
-  report: string;
-  rating: number;
-  tagId: string | null;
+  report?: string | null;
+  rating?: number;
   logId: string;
 };
 
 export type LogType = {
-  entries: LogEntry[];
+  entries?: LogEntry[];
   id: string;
   dayNumber: number;
-  dayStatus: string;
+  dayStatus?: string;
   latest?: boolean;
-  userId: string;
+  userId?: string;
+  content?: string | null;
   createdAt: string;
 };

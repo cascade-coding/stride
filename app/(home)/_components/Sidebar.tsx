@@ -9,21 +9,24 @@ import SidebarMenu from "@/components/shared/icons/SidebarMenu";
 import useInitialUserData from "@/lib/hooks/useInitialUserData";
 import SidebarSkeleton from "./SidebarSkeleton";
 import { useAppSelector } from "@/lib/hooks";
+import { usePathname } from "next/navigation";
 
-const Sidebar = ({ sheet = true }: { sheet?: boolean }) => {
+const Sidebar = () => {
   useInitialUserData();
   const logInitialLoading = useAppSelector((state) => state.log.initialLoading);
 
+  const pathName = usePathname();
+
   return (
     <>
-      {sheet && (
+      {pathName !== "/" && (
         <Sheet>
           <SheetTrigger className="lg:hidden text-left pl-4 pt-2 w-fit" asChild>
             <button>
               <SidebarMenu />
             </button>
           </SheetTrigger>
-          <SheetContent side={"left"} className="px-0 pt-0">
+          <SheetContent side={"left"} className="px-0 pt-0 relative">
             {logInitialLoading ? <SidebarSkeleton /> : <SidebarContent />}
           </SheetContent>
         </Sheet>
@@ -31,8 +34,8 @@ const Sidebar = ({ sheet = true }: { sheet?: boolean }) => {
 
       <div
         className={cn(
-          "border-r-0 md:border-r w-full lg:w-80 lg:block",
-          sheet !== false && "hidden"
+          "border-r-0 md:border-r w-full lg:w-80 lg:block h-dvh",
+          pathName !== "/" && "hidden"
         )}
       >
         {logInitialLoading ? <SidebarSkeleton /> : <SidebarContent />}

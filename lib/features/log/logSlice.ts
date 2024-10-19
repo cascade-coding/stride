@@ -10,6 +10,7 @@ interface logState {
   pageEnded: boolean;
   initialLoading: boolean;
   showLogId: string | null;
+  entryUpdating: boolean;
 }
 
 // Define the initial state using that type
@@ -20,6 +21,7 @@ const initialState: logState = {
   pageEnded: false,
   initialLoading: true,
   showLogId: null,
+  entryUpdating: false,
 };
 
 export const logSlice = createSlice({
@@ -32,6 +34,7 @@ export const logSlice = createSlice({
 
     setLatestLog: (state, action: PayloadAction<LogType>) => {
       state.logs.push(action.payload);
+      state.showLogId = action.payload.id;
     },
 
     addLogs: (state, action: PayloadAction<LogType[]>) => {
@@ -69,6 +72,10 @@ export const logSlice = createSlice({
     setShowLogId: (state, action: PayloadAction<string | null>) => {
       state.showLogId = action.payload;
     },
+
+    setEntryUpdating: (state, action: PayloadAction<boolean>) => {
+      state.entryUpdating = action.payload;
+    },
   },
 });
 
@@ -82,6 +89,7 @@ export const {
   updatePageEndedStatus,
   setInitialLoading,
   setShowLogId,
+  setEntryUpdating,
 } = logSlice.actions;
 
 export const selectLog = (state: RootState) => state.log;
