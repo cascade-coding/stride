@@ -1,106 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import LogInfo from "./LogInfo";
 import StatusButton from "./StatusButton";
 import { statusType } from "@/lib/types";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import LogEntryCard from "./LogEntryCard";
-import { v4 as uuidv4 } from "uuid";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { PlusSquare } from "lucide-react";
-import { getLogById } from "@/app/actions/log/read";
-import { updateLog } from "@/lib/features/log/logSlice";
+import useHandleLogRenderAndUpdate from "@/lib/hooks/useHandleLogRenderAndUpdate";
 
 const LogEditor = () => {
-  const log = useAppSelector((state) =>
-    state.log.logs.find((log) => log.id === state.log.showLogId)
-  );
-
-  const entryUpdating = useAppSelector((state) => state.log.entryUpdating);
-
-  const [elements, setElements] = useState<
-    { id: string; content: JSX.Element }[]
-  >([]);
-
-  const [loading, setLoading] = useState(true);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    setElements([]);
-
-    if (log?.latest) {
-      setLoading(false);
-    }
-
-    if (log && !log.userId) {
-      setLoading(true);
-      (async () => {
-        try {
-          const res = await getLogById({ logId: log.id });
-
-          if ("errorMessage" in res) return;
-
-          dispatch(updateLog({ ...res }));
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(false);
-        }
-      })();
-    }
-
-    if (log && log.entries && log.entries.length < 1) {
-      const newId = uuidv4();
-
-      setElements([
-        {
-          id: newId,
-          content: (
-            <div key={newId} className="relative">
-              <div
-                onClick={() => removeElement(newId)}
-                className="right-0 top-0 absolute bg-muted p-1"
-              >
-                <Cross2Icon className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <LogEntryCard logId={log.id} />
-            </div>
-          ),
-        },
-      ]);
-    }
-  }, [log, dispatch]);
-
+  const { loading, log, elements, entryUpdating, addElement } =
+    useHandleLogRenderAndUpdate();
   if (!log) return <></>;
-
-  const addElement = () => {
-    const newId = uuidv4();
-    setElements([
-      ...elements,
-      {
-        id: newId,
-        content: (
-          <div key={newId} className="relative">
-            <div
-              onClick={() => removeElement(newId)}
-              className="right-0 top-0 absolute bg-muted p-1"
-            >
-              <Cross2Icon className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <LogEntryCard logId={log.id} />
-          </div>
-        ),
-      },
-    ]);
-  };
-
-  const removeElement = (id: string) => {
-    console.log({ id });
-    // Filter out the element with the matching unique ID
-    setElements((prev) => prev.filter((el) => el.id !== id));
-  };
 
   if (loading) return <>loading...</>;
 
