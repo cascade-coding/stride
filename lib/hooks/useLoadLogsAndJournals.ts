@@ -1,7 +1,12 @@
-import { getOrCreateLog, previousLogs } from "@/app/actions/log/read";
+import {
+  getAllTags,
+  getOrCreateLog,
+  previousLogs,
+} from "@/app/actions/log/read";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   addLogs,
+  addTags,
   setLatestLog,
   updatePageEndedStatus,
   updatePageNumber,
@@ -18,22 +23,17 @@ function useLoadLogsAndJournals() {
   const getLatestLog = async () => {
     const { today, now } = getDateTime();
 
-    console.log("coolll")
-
     try {
       const log = await getOrCreateLog({ today, now });
 
-      console.log('fuckk xxxxxxxxxxxxxxx')
-
       if ("errorMessage" in log) return null;
-
 
       dispatch(setLatestLog({ ...log, latest: true }));
 
       return { message: "data loaded" };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return null;
     }
   };
@@ -42,11 +42,7 @@ function useLoadLogsAndJournals() {
     if (logPageEnded === true) return;
     const { today } = getDateTime();
 
-    console.log({ logPageNumber });
-
     dispatch(updatePageNumber());
-
-    console.log({ logPageNumber });
 
     try {
       const logs = await previousLogs({ page: logPageNumber, today });
@@ -67,7 +63,25 @@ function useLoadLogsAndJournals() {
     }
   };
 
-  return { getLatestLog, getPreviousLogs };
+  const getTags = async () => {
+    try {
+      const tags = await getAllTags();
+
+      if ("errorMessage" in tags) return null;
+
+      dispatch(addTags(tags));
+
+      console.log(tags, "qqqqqqqqqqqqqqqq");
+
+      return { message: "data loaded" };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  return { getLatestLog, getPreviousLogs, getTags };
 }
 
 export default useLoadLogsAndJournals;

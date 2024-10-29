@@ -220,4 +220,35 @@ async function getLogById({ logId }: { logId: string }) {
   }
 }
 
-export { getOrCreateLog, previousLogs, getLogById };
+/*
+
+! get all tags
+
+*/
+
+async function getAllTags() {
+  try {
+    const authUser = await currentUser();
+
+    if (!authUser) return { errorMessage: "something went wrong" };
+
+    const user = await prisma.user.findFirst({
+      where: {
+        authId: authUser.id,
+      },
+    });
+
+    if (!user) return { errorMessage: "something went wrong" };
+
+    const tags = await prisma.tag.findMany({
+      where: { userId: user.id },
+    });
+
+    return tags;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { errorMessage: "something went wrong" };
+  }
+}
+
+export { getOrCreateLog, previousLogs, getLogById, getAllTags };

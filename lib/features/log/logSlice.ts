@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "@/lib/store";
-import { LogType } from "@/lib/types";
+import { LogType, Tag } from "@/lib/types";
 
 interface logState {
   logs: LogType[];
@@ -11,6 +11,7 @@ interface logState {
   initialLoading: boolean;
   showLogId: string | null;
   entryUpdating: boolean;
+  tags: Tag[];
 }
 
 // Define the initial state using that type
@@ -22,6 +23,7 @@ const initialState: logState = {
   initialLoading: true,
   showLogId: null,
   entryUpdating: false,
+  tags: [],
 };
 
 export const logSlice = createSlice({
@@ -76,6 +78,10 @@ export const logSlice = createSlice({
     setEntryUpdating: (state, action: PayloadAction<boolean>) => {
       state.entryUpdating = action.payload;
     },
+
+    addTags: (state, action: PayloadAction<Tag[]>) => {
+      state.tags.push(...action.payload);
+    },
   },
 });
 
@@ -90,6 +96,7 @@ export const {
   setInitialLoading,
   setShowLogId,
   setEntryUpdating,
+  addTags,
 } = logSlice.actions;
 
 export const selectLog = (state: RootState) => state.log;

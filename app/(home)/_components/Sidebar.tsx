@@ -26,7 +26,7 @@ const Sidebar = () => {
               <SidebarMenu />
             </button>
           </SheetTrigger>
-          <SheetContent side={"left"} className="px-0 pt-0 relative">
+          <SheetContent side={"left"} className="px-0 pt-0">
             {logInitialLoading ? <SidebarSkeleton /> : <SidebarContent />}
           </SheetContent>
         </Sheet>

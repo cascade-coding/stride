@@ -4,10 +4,10 @@ export type Tag = {
   id: string;
   tagName: string;
   userId: string;
-} | null;
+};
 
 export type LogEntry = {
-  tag?: Tag;
+  tag?: Tag | null;
   title: string;
   id: string;
   report?: string | null;
