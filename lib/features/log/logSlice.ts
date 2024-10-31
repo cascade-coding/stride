@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "@/lib/store";
-import { LogType, Tag } from "@/lib/types";
+import { LogInfoType, LogType, Tag } from "@/lib/types";
 
 interface logState {
-  logs: LogType[];
+  logs: LogInfoType[];
+  selectedLog: LogType | null;
   pageNumber: number;
   totalPageNumber: number;
   pageEnded: boolean;
@@ -24,6 +25,7 @@ const initialState: logState = {
   showLogId: null,
   entryUpdating: false,
   tags: [],
+  selectedLog: null,
 };
 
 export const logSlice = createSlice({
@@ -44,15 +46,7 @@ export const logSlice = createSlice({
     },
 
     updateLog: (state, action: PayloadAction<LogType>) => {
-      const { id } = action.payload;
-      const index = state.logs.findIndex((log) => log.id === id);
-
-      if (index !== -1) {
-        state.logs[index] = {
-          ...state.logs[index],
-          ...action.payload,
-        };
-      }
+      state.selectedLog = action.payload;
     },
 
     updatePageNumber: (state) => {

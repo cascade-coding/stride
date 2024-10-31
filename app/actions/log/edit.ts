@@ -160,4 +160,58 @@ async function createNewTag(input: NewTagInput) {
   }
 }
 
-export { updateStatus, createOrUpdateEntry, createNewTag };
+/*
+
+! update log note content
+
+*/
+
+interface UpdateLogNoteInput {
+  logId: string;
+  content?: string;
+}
+
+async function updateLogNoteContent(input: UpdateLogNoteInput) {
+  try {
+    const authUser = await currentUser();
+
+    if (!authUser) return { errorMessage: "something went wrong" };
+
+    const user = await prisma.user.findFirst({
+      where: {
+        authId: authUser.id,
+      },
+    });
+
+    if (!user) return { errorMessage: "something went wrong" };
+
+    const { logId, content } = input;
+
+    const updatedLog = await prisma.log.update({
+      where: { id: logId },
+      data: { content },
+      include: {
+        entries: { include: { tag: true } },
+      },
+    });
+
+    if (!updatedLog) {
+      return { errorMessage: "Log not found" };
+    }
+
+    return {
+      ...updatedLog,
+      createdAt: new Date(updatedLog.createdAt).toISOString(),
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { errorMessage: "something went wrong" };
+  }
+}
+
+export {
+  updateStatus,
+  createOrUpdateEntry,
+  createNewTag,
+  updateLogNoteContent,
+};

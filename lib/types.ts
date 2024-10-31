@@ -8,7 +8,7 @@ export type Tag = {
 
 export type LogEntry = {
   tag?: Tag | null;
-  title: string;
+  title: string | null;
   id: string;
   report?: string | null;
   rating?: number;
@@ -23,5 +23,11 @@ export type LogType = {
   latest?: boolean;
   userId?: string;
   content?: string | null;
+  createdAt: string;
+};
+
+export type LogInfoType = {
+  id: string;
+  dayNumber: number;
   createdAt: string;
 };

@@ -1,6 +1,6 @@
 import React from "react"; // Import React and ReactNode
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { updateLog } from "../features/log/logSlice";
+import { updateLog, setEntryUpdating } from "../features/log/logSlice";
 import { useEffect, useState } from "react";
 import { getLogById } from "@/app/actions/log/read";
 import { v4 as uuidv4 } from "uuid";
@@ -12,11 +12,13 @@ function useHandleLogRenderAndUpdate() {
     state.log.logs.find((log) => log.id === state.log.showLogId)
   );
 
+  const selectedLog = useAppSelector((state) => state.log.selectedLog);
+
   const entryUpdating = useAppSelector((state) => state.log.entryUpdating);
 
   const [elements, setElements] = useState<
     { id: string; content: JSX.Element }[]
-  >([{ id: "545454", content: <></> }]);
+  >([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -25,18 +27,14 @@ function useHandleLogRenderAndUpdate() {
   useEffect(() => {
     setElements([]);
 
-    if (log?.latest) {
-      setLoading(false);
-    }
-
-    if (log && !log.userId) {
-      setLoading(true);
+    if (log) {
       (async () => {
         try {
+          setLoading(true);
+
           const res = await getLogById({ logId: log.id });
 
           if ("errorMessage" in res) return;
-
           dispatch(updateLog({ ...res }));
         } catch (error) {
           console.log(error);
@@ -45,8 +43,12 @@ function useHandleLogRenderAndUpdate() {
         }
       })();
     }
+  }, [log, dispatch]);
 
-    if (log && log.entries && log.entries.length < 1) {
+  useEffect(() => {
+    setElements([]);
+
+    if (selectedLog && selectedLog.entries && selectedLog.entries.length <= 0) {
       const newId = uuidv4();
 
       setElements([
@@ -60,13 +62,22 @@ function useHandleLogRenderAndUpdate() {
               >
                 <Cross2Icon className="h-4 w-4 text-muted-foreground" />
               </div>
-              <LogEntryCard logId={log.id} />
+              <LogEntryCard logId={selectedLog.id} />
             </div>
           ),
         },
       ]);
     }
-  }, [log, dispatch]);
+  }, [selectedLog]);
+
+  useEffect(() => {
+    if (elements.length >= 1) {
+      dispatch(setEntryUpdating(true));
+      return;
+    } else {
+      dispatch(setEntryUpdating(false));
+    }
+  }, [elements, dispatch]);
 
   const removeElement = (id: string) => {
     console.log({ id });
@@ -76,7 +87,9 @@ function useHandleLogRenderAndUpdate() {
 
   const addElement = () => {
     const newId = uuidv4();
+
     if (!log) return;
+
     setElements([
       ...elements,
       {
@@ -96,7 +109,14 @@ function useHandleLogRenderAndUpdate() {
     ]);
   };
 
-  return { loading, log, elements, entryUpdating, removeElement, addElement };
+  return {
+    loading,
+    log: selectedLog,
+    elements,
+    entryUpdating,
+    removeElement,
+    addElement,
+  };
 }
 
 export default useHandleLogRenderAndUpdate;

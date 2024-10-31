@@ -26,7 +26,7 @@ function useLoadLogsAndJournals() {
     try {
       const log = await getOrCreateLog({ today, now });
 
-      if ("errorMessage" in log) return null;
+      if (log && "errorMessage" in log) return null;
 
       dispatch(setLatestLog({ ...log, latest: true }));
 
@@ -47,7 +47,7 @@ function useLoadLogsAndJournals() {
     try {
       const logs = await previousLogs({ page: logPageNumber, today });
 
-      if ("errorMessage" in logs) return null;
+      if (logs && "errorMessage" in logs) return null;
 
       dispatch(updateTotalPageNumber(logs.meta.totalPages));
       dispatch(addLogs(logs.logs));
@@ -67,11 +67,9 @@ function useLoadLogsAndJournals() {
     try {
       const tags = await getAllTags();
 
-      if ("errorMessage" in tags) return null;
+      if (tags && "errorMessage" in tags) return null;
 
       dispatch(addTags(tags));
-
-      console.log(tags, "qqqqqqqqqqqqqqqq");
 
       return { message: "data loaded" };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

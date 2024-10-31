@@ -34,18 +34,16 @@ async function getOrCreateLog({ today, now }: { today: string; now: string }) {
     // Check if the log for today already exists
     const existingLog = await prisma.log.findFirst({
       where: {
-        userId: userId,
+        userId,
         createdAt: {
           gte: startOfDay,
           lt: endOfDay,
         },
       },
-      include: {
-        entries: {
-          include: {
-            tag: true,
-          },
-        },
+      select: {
+        id: true,
+        dayNumber: true,
+        createdAt: true,
       },
     });
 
@@ -56,24 +54,42 @@ async function getOrCreateLog({ today, now }: { today: string; now: string }) {
       };
     } else {
       const logCount = await prisma.log.count({
-        where: { userId: userId },
+        where: { userId },
+      });
+
+      // ! the last log to duplicate
+
+      const lastLog = await prisma.log.findFirst({
+        where: { userId },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: { entries: true },
       });
 
       const newLog = await prisma.log.create({
         data: {
           dayNumber: logCount + 1, // Increment day number by 1
           dayStatus: "Good",
-          userId: userId, // Associate with the current user
+          userId,
           createdAt: dateTime,
+          entries: lastLog
+            ? {
+                create: lastLog.entries.map((entry) => ({
+                  title: entry.title,
+                  tagId: entry.tagId,
+                  id: undefined,
+                })),
+              }
+            : undefined,
         },
-        include: {
-          entries: {
-            include: {
-              tag: true,
-            },
-          },
+        select: {
+          id: true,
+          dayNumber: true,
+          createdAt: true,
         },
       });
+
       return {
         ...newLog,
         createdAt: new Date(newLog.createdAt).toISOString(),

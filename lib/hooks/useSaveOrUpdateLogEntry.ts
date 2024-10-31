@@ -2,7 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import useAdjustTextareaHeight from "./useAdjustTextareaHeight";
 import { LogEntry } from "../types";
 import { debounce } from "lodash";
-import { createNewTag, createOrUpdateEntry } from "@/app/actions/log/edit";
+import {
+  createNewTag,
+  createOrUpdateEntry,
+  updateLogNoteContent,
+} from "@/app/actions/log/edit";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addTags, setEntryUpdating, updateLog } from "../features/log/logSlice";
 
@@ -54,8 +58,32 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
     }
   };
 
+  const updateLogNote = async ({
+    content,
+  }: {
+    content: string;
+  }): Promise<void> => {
+    try {
+      const response = await updateLogNoteContent({ content, logId });
+
+      if (!("errorMessage" in response)) {
+        console.log("content updated");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      // dispatch(setEntryUpdating(false));
+    }
+  };
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedFun = useCallback(debounce(updateLogEntry, 1000), []);
+  const updateLogEntryDebounce = useCallback(
+    debounce(updateLogEntry, 1000),
+    []
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateLogNoteDebounce = useCallback(debounce(updateLogNote, 1000), []);
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -67,7 +95,11 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
 
     dispatch(setEntryUpdating(true));
 
-    debouncedFun({ ...updatedInputs });
+    updateLogEntryDebounce({ ...updatedInputs });
+  };
+
+  const handleNoteContentChange = (content: string) => {
+    updateLogNoteDebounce({ content });
   };
 
   useEffect(() => {
@@ -77,7 +109,6 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
   const addNewTagOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-      e.stopPropagation();
 
       const newTagName = newTag;
 
@@ -111,6 +142,7 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
     setNewTag,
     addNewTagOnSubmit,
     newTagLoading,
+    handleNoteContentChange,
   };
 }
 

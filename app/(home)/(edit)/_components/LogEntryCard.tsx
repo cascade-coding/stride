@@ -129,15 +129,6 @@ const LogEntryCard = ({ logId, entry = null }: LogEntryCardProps) => {
                   )}
                 </SelectContent>
               </Select>
-
-              {/* <div className="bg-red-950 absolute w-44">
-                <div>Workout</div>
-                <div>Workout</div>
-                <div>Workout</div>
-                <div>Workout</div>
-                <div>Workout</div>
-                <div>Workout</div>
-              </div> */}
             </div>
 
             <div className="flex-1">
