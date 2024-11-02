@@ -217,9 +217,35 @@ async function updateLogNoteContent(input: UpdateLogNoteInput) {
   }
 }
 
+/*
+
+! delete log entry by id
+
+*/
+
+async function deleteEntryById(entryid: string) {
+  try {
+    const authUser = await currentUser();
+
+    if (!authUser) return { errorMessage: "something went wrong" };
+
+    await prisma.entry.delete({
+      where: {
+        id: entryid,
+      },
+    });
+
+    return { message: "entry deleted" };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { errorMessage: "something went wrong" };
+  }
+}
+
 export {
   updateStatus,
   createOrUpdateEntry,
   createNewTag,
   updateLogNoteContent,
+  deleteEntryById,
 };

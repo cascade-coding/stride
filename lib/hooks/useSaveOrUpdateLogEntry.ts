@@ -5,11 +5,13 @@ import { debounce } from "lodash";
 import {
   createNewTag,
   createOrUpdateEntry,
+  deleteEntryById,
   updateLogNoteContent,
 } from "@/app/actions/log/edit";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   addTags,
+  removeEntry,
   setEntryUpdating,
   updateEntry,
 } from "../features/log/logSlice";
@@ -136,6 +138,14 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
     }
   };
 
+  const handleDeleteEntry = async (entryId: string) => {
+    console.log(entryId);
+
+    dispatch(removeEntry(entryId));
+
+    deleteEntryById(entryId).then(() => console.log("entry deleted"));
+  };
+
   return {
     inputs,
     textareaRef,
@@ -145,6 +155,7 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
     addNewTagOnSubmit,
     newTagLoading,
     handleNoteContentChange,
+    handleDeleteEntry,
   };
 }
 

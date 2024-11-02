@@ -11,15 +11,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAppSelector } from "@/lib/hooks";
-import { Pen } from "lucide-react";
-import { Cross1Icon } from "@radix-ui/react-icons";
+import { MoveRight, Pen, TrendingDown, TrendingUp } from "lucide-react";
+import { Cross1Icon, Cross2Icon } from "@radix-ui/react-icons";
 
 interface LogEntryCardProps {
   logId: string;
-  entry?: null | LogEntry;
+  entry: LogEntry;
 }
 
-const LogEntryCard = ({ logId, entry = null }: LogEntryCardProps) => {
+const LogEntryCard = ({ logId, entry }: LogEntryCardProps) => {
   const {
     handleInputChange,
     inputs,
@@ -28,6 +28,7 @@ const LogEntryCard = ({ logId, entry = null }: LogEntryCardProps) => {
     setNewTag,
     addNewTagOnSubmit,
     newTagLoading,
+    handleDeleteEntry,
   } = useSaveOrUpdateLogEntry({
     logId,
     entry,
@@ -36,7 +37,13 @@ const LogEntryCard = ({ logId, entry = null }: LogEntryCardProps) => {
   const tags = useAppSelector((state) => state.log.tags);
 
   return (
-    <>
+    <div className="relative">
+      <div
+        className="right-0 top-0 absolute bg-muted p-1 cursor-pointer"
+        onClick={() => handleDeleteEntry(entry.id)}
+      >
+        <Cross2Icon className="h-4 w-4 text-muted-foreground" />
+      </div>
       <Card className="rounded-none">
         <CardContent className="px-0 py-0">
           <div>
@@ -131,20 +138,35 @@ const LogEntryCard = ({ logId, entry = null }: LogEntryCardProps) => {
               </Select>
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 flex items-center">
               <Input
                 placeholder="Rate out of 10"
-                className="focus-visible:ring-0 focus-visible:ring-transparent border-transparent rounded-none"
+                className="focus-visible:ring-0 focus-visible:ring-transparent border-transparent rounded-none w-32"
                 type="number"
                 name="rating"
                 value={inputs.rating}
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (value > 10 || value <= 0) return;
+                  handleInputChange(e);
+                }}
               />
+              <div className="flex-1">
+                {inputs.rating >= 7 && (
+                  <TrendingUp className="w-4 h-4 text-green-600" />
+                )}
+                {(inputs.rating >= 5 && inputs.rating <= 6) && (
+                  <MoveRight className="w-4 h-4 text-amber-600" />
+                )}
+                {inputs.rating < 5 && (
+                  <TrendingDown className="w-4 h-4 text-rose-600" />
+                )}
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 };
 

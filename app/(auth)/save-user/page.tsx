@@ -16,9 +16,6 @@ const saveUser = async ({
   });
 
   if (existingUser) {
-    console.log("++++++++++++++++++++++++++++");
-    console.log({ existingUser });
-    console.log("++++++++++++++++++++++++++++");
     return { message: "User already exists!" };
   }
 

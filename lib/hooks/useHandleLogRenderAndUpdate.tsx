@@ -36,6 +36,21 @@ function useHandleLogRenderAndUpdate() {
     }
   }, [log, dispatch]);
 
+  useEffect(() => {
+    if (selectedLog?.entries && selectedLog.entries.length <= 0) {
+      const cuid = init({ length: 25 });
+
+      const addEntry = {
+        ...selectedLog,
+        entries: [...(selectedLog.entries || [])],
+      };
+
+      addEntry.entries.push({ id: cuid(), logId: selectedLog.id, title: "" });
+
+      dispatch(updateLog({ ...addEntry }));
+    }
+  }, [selectedLog, dispatch]);
+
   const addElement = () => {
     if (!selectedLog) return;
 

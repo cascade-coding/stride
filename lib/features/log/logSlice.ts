@@ -93,6 +93,15 @@ export const logSlice = createSlice({
       state.entryUpdating = action.payload;
     },
 
+    removeEntry: (state, action: PayloadAction<string>) => {
+      const log = state.selectedLog;
+      if (log && log.entries) {
+        log.entries = log.entries.filter(
+          (entry) => entry.id !== action.payload
+        );
+      }
+    },
+
     addTags: (state, action: PayloadAction<Tag[]>) => {
       state.tags.push(...action.payload);
     },
@@ -112,6 +121,7 @@ export const {
   setEntryUpdating,
   addTags,
   updateEntry,
+  removeEntry,
 } = logSlice.actions;
 
 export const selectLog = (state: RootState) => state.log;
