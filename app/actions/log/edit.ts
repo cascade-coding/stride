@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
+import { isCuid } from "@paralleldrive/cuid2";
 
 /*
  
@@ -89,34 +90,41 @@ async function createOrUpdateEntry(input: UpsertEntryInput) {
 
     const rating = +newRating;
 
+    let newEntry;
+
     // Check if entryId is provided for updating
-    if (entryId) {
-      await prisma.entry.update({
+    if (entryId && isCuid(entryId)) {
+      newEntry = await prisma.entry.upsert({
         where: { id: entryId },
-        data: { title, report, rating, tagId },
+        update: { title, report, rating, tagId },
+        create: {
+          id: entryId,
+          title,
+          report,
+          rating,
+          tagId,
+          logId,
+        },
+        include: { tag: true },
       });
     } else {
-      // Create a new entry if entryId is not provided
-      await prisma.entry.create({
-        data: { title, report, rating, tagId, logId },
+      newEntry = await prisma.entry.create({
+        data: {
+          title,
+          report,
+          rating,
+          tagId,
+          logId,
+        },
+        include: { tag: true },
       });
     }
 
-    const updatedLog = await prisma.log.findUnique({
-      where: { id: logId },
-      include: {
-        entries: { include: { tag: true } },
-      },
-    });
-
-    if (!updatedLog) {
-      return { errorMessage: "Log not found" };
+    if (!newEntry) {
+      return { errorMessage: "Entry not found" };
     }
 
-    return {
-      ...updatedLog,
-      createdAt: new Date(updatedLog.createdAt).toISOString(),
-    };
+    return newEntry;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return { errorMessage: "something went wrong" };

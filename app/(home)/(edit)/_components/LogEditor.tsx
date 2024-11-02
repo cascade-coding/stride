@@ -9,9 +9,10 @@ import { PlusSquare } from "lucide-react";
 import useHandleLogRenderAndUpdate from "@/lib/hooks/useHandleLogRenderAndUpdate";
 import LogNoteEditor from "./LogNoteEditor";
 import Loading from "@/components/shared/Loading";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 const LogEditor = () => {
-  const { loading, log, elements, entryUpdating, addElement } =
+  const { loading, log, entryUpdating, addElement } =
     useHandleLogRenderAndUpdate();
 
   if (!log) return <></>;
@@ -44,14 +45,13 @@ const LogEditor = () => {
         <div className="mt-7 flex flex-col gap-y-4">
           {log.entries &&
             log.entries.map((entry) => (
-              <div key={entry.id}>
+              <div key={entry.id} className="relative">
+                <div className="right-0 top-0 absolute bg-muted p-1">
+                  <Cross2Icon className="h-4 w-4 text-muted-foreground" />
+                </div>
                 <LogEntryCard logId={log.id} entry={entry} />
               </div>
             ))}
-
-          {elements.map((item) => (
-            <div key={item.id}>{item.content}</div>
-          ))}
         </div>
         <button
           onClick={addElement}

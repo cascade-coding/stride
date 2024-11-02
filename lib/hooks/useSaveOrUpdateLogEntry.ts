@@ -8,7 +8,11 @@ import {
   updateLogNoteContent,
 } from "@/app/actions/log/edit";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { addTags, setEntryUpdating, updateLog } from "../features/log/logSlice";
+import {
+  addTags,
+  setEntryUpdating,
+  updateEntry,
+} from "../features/log/logSlice";
 
 interface LogEntryCardProps {
   logId: string;
@@ -48,8 +52,8 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
         entryId: entry?.id,
       });
 
-      if (!("errorMessage" in response)) {
-        dispatch(updateLog({ ...response }));
+      if (response && !("errorMessage" in response)) {
+        dispatch(updateEntry({ ...response }));
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -71,8 +75,6 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-    } finally {
-      // dispatch(setEntryUpdating(false));
     }
   };
 

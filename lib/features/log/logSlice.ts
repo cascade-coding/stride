@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "@/lib/store";
-import { LogInfoType, LogType, Tag } from "@/lib/types";
+import { LogEntry, LogInfoType, LogType, Tag } from "@/lib/types";
 
 interface logState {
   logs: LogInfoType[];
@@ -49,6 +49,26 @@ export const logSlice = createSlice({
       state.selectedLog = action.payload;
     },
 
+    updateEntry: (state, action: PayloadAction<LogEntry>) => {
+      if (!state.selectedLog) return;
+
+      // Find the index of the entry with the given entryId
+      const entryIndex = state.selectedLog.entries?.findIndex(
+        (entry) => entry.id === action.payload.id
+      );
+
+      if (
+        entryIndex !== undefined &&
+        entryIndex !== -1 &&
+        state.selectedLog.entries
+      ) {
+        state.selectedLog.entries[entryIndex] = {
+          ...state.selectedLog.entries[entryIndex],
+          ...action.payload,
+        };
+      }
+    },
+
     updatePageNumber: (state) => {
       state.pageNumber += 1;
     },
@@ -91,6 +111,7 @@ export const {
   setShowLogId,
   setEntryUpdating,
   addTags,
+  updateEntry,
 } = logSlice.actions;
 
 export const selectLog = (state: RootState) => state.log;
