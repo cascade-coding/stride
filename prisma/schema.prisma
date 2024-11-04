@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  authId    String   @unique
-  email     String?  @unique
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  authId    String    @unique
+  email     String?   @unique
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
   logs      Log[]
   tags      Tag[]
+  Journal   Journal[]
 
   @@map("users")
 }
@@ -56,4 +57,20 @@ model Tag {
   user    User    @relation(fields: [userId], references: [id])
 
   @@map("tags")
+}
+
+model Journal {
+  id            String    @id @default(cuid())
+  coverPhotoUrl String? 
+  title         String?
+  content       String?
+  favorite      Boolean   @default(false)
+  favoritedAt   DateTime?
+  trashedAt     DateTime?
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("journals")
 }

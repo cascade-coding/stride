@@ -30,4 +30,28 @@ export type LogInfoType = {
   id: string;
   dayNumber: number;
   createdAt: string;
+  latest?: boolean;
 };
+
+export interface JournalInfoType {
+  id: string;
+  title?: string | null;
+  favorite: boolean;
+  favoritedAt?: Date | null;
+  trashedAt?: Date | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface JournalType {
+  id: string;
+  coverPhotoUrl?: string | null;
+  title?: string | null;
+  content?: string | null;
+  favorite: boolean;
+  favoritedAt?: Date | null;
+  trashedAt?: Date | null;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}

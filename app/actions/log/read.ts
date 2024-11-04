@@ -77,6 +77,7 @@ async function getOrCreateLog({ today, now }: { today: string; now: string }) {
             ? {
                 create: lastLog.entries.map((entry) => ({
                   title: entry.title,
+                  rating: entry.rating,
                   tagId: entry.tagId,
                   id: undefined,
                 })),
@@ -108,7 +109,7 @@ async function getOrCreateLog({ today, now }: { today: string; now: string }) {
 */
 async function previousLogs({
   page = 1,
-  limit = 2,
+  limit = 5,
   today,
 }: {
   page: number;

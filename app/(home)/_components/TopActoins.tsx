@@ -8,6 +8,8 @@ import LineChart from "@/components/shared/icons/LineChart";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setShowLogId } from "@/lib/features/log/logSlice";
+import { setShowJournalId } from "@/lib/features/log/journalSlice";
+import { init } from "@paralleldrive/cuid2";
 
 const TopActoins = () => {
   const router = useRouter();
@@ -36,7 +38,11 @@ const TopActoins = () => {
           text="New Journal"
           Icon={<NoteJournal className="w-14 h-14 md:w-12 md:h-12" />}
           className="flex-col py-4 md:flex-row md:py-1.5"
-          onClick={() => router.push(`/journal`)}
+          onClick={() => {
+            const newId = init({ length: 25 });
+            dispatch(setShowJournalId(newId()));
+            router.push(`/edit-journal`);
+          }}
         />
       </div>
       <MainCta

@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef } from "react";
-import useLoadLogsAndJournals from "./useLoadLogsAndJournals";
+import useLoadLogs from "./useLoadLogs";
 import { useAppDispatch } from "../hooks";
 import { setInitialLoading } from "../features/log/logSlice";
+import useLoadJournals from "./useLoadJournals";
 
 function useInitialUserData() {
   const effectRan = useRef(false);
-  const { getLatestLog, getPreviousLogs, getTags } = useLoadLogsAndJournals();
+  const { getLatestLog, getPreviousLogs, getTags } = useLoadLogs();
+  const { getPreviousJournals } = useLoadJournals();
 
   const dispatch = useAppDispatch();
 
@@ -19,12 +21,15 @@ function useInitialUserData() {
 
       // Load previews logs
       await getPreviousLogs();
+
+      // Load previews journals
+      await getPreviousJournals();
     } catch (error) {
       console.error("Error loading logs and journals:", error);
     } finally {
       dispatch(setInitialLoading(false));
     }
-  }, [getLatestLog, getPreviousLogs, getTags, dispatch]);
+  }, [getLatestLog, getPreviousLogs, getPreviousJournals, getTags, dispatch]);
 
   useEffect(() => {
     if (effectRan.current === false) {

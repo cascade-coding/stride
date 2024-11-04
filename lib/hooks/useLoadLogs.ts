@@ -14,7 +14,7 @@ import {
 } from "../features/log/logSlice";
 import { getDateTime } from "../services";
 
-function useLoadLogsAndJournals() {
+function useLoadLogs() {
   const dispatch = useAppDispatch();
 
   const logPageNumber = useAppSelector((state) => state.log.pageNumber);
@@ -82,4 +82,4 @@ function useLoadLogsAndJournals() {
   return { getLatestLog, getPreviousLogs, getTags };
 }
 
-export default useLoadLogsAndJournals;
+export default useLoadLogs;

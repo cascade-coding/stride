@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import SidebarLabel from "./SidebarLabel";
+import PreviousJournals from "./PreviousJournals";
 
 const SidebarContent = () => {
   return (
@@ -39,7 +40,9 @@ const SidebarContent = () => {
             <AccordionTrigger className="hover:no-underline">
               <SidebarLabel text="Journals" />
             </AccordionTrigger>
-            <AccordionContent>All the journals here....</AccordionContent>
+            <AccordionContent>
+              <PreviousJournals />
+            </AccordionContent>
           </AccordionItem>
         </Accordion>
       </div>

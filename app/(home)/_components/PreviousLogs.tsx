@@ -9,7 +9,7 @@ import useLoadMoreLogs from "@/lib/hooks/useLoadMoreLogs";
 const PreviousLogs = () => {
   const logs = useAppSelector(selectPreviousLogs);
 
-  const inViewRef = useLoadMoreLogs();
+  const { ref: inViewRef, loading } = useLoadMoreLogs();
 
   return (
     <div>
@@ -21,8 +21,10 @@ const PreviousLogs = () => {
         )}
       >
         {logs.map((log) => (
-          <SidebarLogCard key={log.id} log={log}/>
+          <SidebarLogCard key={log.id} log={log} />
         ))}
+
+        {loading && <p>loading...</p>}
 
         <div className="-mt-3 h-2 bg-transparent" ref={inViewRef} />
       </ScrollArea>

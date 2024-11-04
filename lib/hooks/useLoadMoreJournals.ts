@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import useLoadLogs from "./useLoadLogs";
+import useLoadJournals from "./useLoadJournals";
 import { useAppSelector } from "../hooks";
 
-export default function useLoadMoreLogs() {
+export default function useLoadMoreJournals() {
   const { ref, inView } = useInView({
     threshold: 0.1,
   });
 
-  const logPageEnded = useAppSelector((state) => state.log.pageEnded);
+  const journalPageEnded = useAppSelector((state) => state.journal.pageEnded);
 
   const [loading, setLoading] = useState(false);
 
-  const { getPreviousLogs } = useLoadLogs();
+  const { getPreviousJournals } = useLoadJournals();
 
   useEffect(() => {
-    if (inView && !loading && !logPageEnded) {
+    if (inView && !loading && !journalPageEnded) {
       setLoading(true);
       (async () => {
         try {
-          await getPreviousLogs();
+          await getPreviousJournals();
         } catch (error) {
           console.log({ error });
         } finally {
@@ -27,7 +27,7 @@ export default function useLoadMoreLogs() {
         }
       })();
     }
-  }, [inView, getPreviousLogs, loading, logPageEnded]);
+  }, [inView, getPreviousJournals, loading, journalPageEnded]);
 
-  return { ref, loading };
+  return ref;
 }
