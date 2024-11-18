@@ -53,6 +53,29 @@ export const journalSlice = createSlice({
     updatePageEndedStatus: (state, action: PayloadAction<boolean>) => {
       state.pageEnded = action.payload;
     },
+
+    updateJournal: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        title: string | null;
+        updatedAt: string;
+      }>
+    ) => {
+      const { id, title, updatedAt } = action.payload;
+
+      const journalIndex = state.journals.findIndex(
+        (journal) => journal.id === id
+      );
+
+      if (journalIndex !== -1) {
+        state.journals[journalIndex] = {
+          ...state.journals[journalIndex],
+          title,
+          updatedAt,
+        };
+      }
+    },
   },
 });
 
@@ -63,6 +86,7 @@ export const {
   updateTotalPageNumber,
   updatePageEndedStatus,
   addJournals,
+  updateJournal,
 } = journalSlice.actions;
 
 export const selectJournal = (state: RootState) => state.journal;

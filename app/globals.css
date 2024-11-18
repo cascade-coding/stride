@@ -277,3 +277,20 @@ input[type="number"] {
   margin-left: 15px;
   animation: loader_5191 675ms ease-in-out 600ms infinite;
 }
+
+.bn-container {
+  position: relative !important;
+}
+
+[data-floating-ui-focusable] {
+  position: absolute !important;
+  z-index: 2000;
+  right: 0 !important;
+  top: 0 !important;
+  left: unset !important;
+}
+
+.ProseMirror.bn-editor.bn-default-styles {
+  padding-left: 0 !important;
+  padding-right: 120px !important;
+}

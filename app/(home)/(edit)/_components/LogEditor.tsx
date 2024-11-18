@@ -14,14 +14,14 @@ const LogEditor = () => {
   const { loading, log, entryUpdating, addElement } =
     useHandleLogRenderAndUpdate();
 
-  if (!log) return <></>;
-
   if (loading)
     return (
       <>
         <Loading />
       </>
     );
+
+  if (!log) return <p>Something went wrong, please refersh the page.</p>;
 
   return (
     <>

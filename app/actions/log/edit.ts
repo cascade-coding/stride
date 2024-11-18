@@ -22,6 +22,14 @@ async function updateStatus({
 
     if (!authUser) return { errorMessage: "something went wrong" };
 
+    const user = await prisma.user.findFirst({
+      where: {
+        authId: authUser.id,
+      },
+    });
+
+    if (!user) return { errorMessage: "something went wrong" };
+
     const updatedLog = await prisma.log.update({
       where: {
         id: logId,
@@ -228,6 +236,14 @@ async function deleteEntryById(entryid: string) {
     const authUser = await currentUser();
 
     if (!authUser) return { errorMessage: "something went wrong" };
+
+    const user = await prisma.user.findFirst({
+      where: {
+        authId: authUser.id,
+      },
+    });
+
+    if (!user) return { errorMessage: "something went wrong" };
 
     await prisma.entry.delete({
       where: {

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env PORT=4000 next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -27,6 +27,7 @@
     "appwrite": "^15.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.446.0",

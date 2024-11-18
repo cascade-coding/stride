@@ -20,9 +20,11 @@ const PreviousLogs = () => {
           logs.length >= 3 && "h-[200px]"
         )}
       >
-        {logs.map((log) => (
-          <SidebarLogCard key={log.id} log={log} />
-        ))}
+        <div id="logs">
+          {logs.map((log) => (
+            <SidebarLogCard key={log.id} log={log} />
+          ))}
+        </div>
 
         {loading && <p>loading...</p>}
 

@@ -41,7 +41,7 @@ export const logSlice = createSlice({
       state.showLogId = action.payload.id;
     },
 
-    addLogs: (state, action: PayloadAction<LogType[]>) => {
+    addLogs: (state, action: PayloadAction<LogInfoType[]>) => {
       state.logs.push(...action.payload);
     },
 

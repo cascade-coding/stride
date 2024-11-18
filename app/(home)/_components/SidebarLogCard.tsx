@@ -1,11 +1,11 @@
 import { setShowLogId } from "@/lib/features/log/logSlice";
 import { useAppDispatch } from "@/lib/hooks";
-import { LogType } from "@/lib/types";
+import { LogInfoType } from "@/lib/types";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const SidebarLogCard = ({ log }: { log: LogType }) => {
+const SidebarLogCard = ({ log }: { log: LogInfoType }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -17,7 +17,7 @@ const SidebarLogCard = ({ log }: { log: LogType }) => {
         router.push("/edit-log");
       }}
     >
-      <h4 className="font-semibold">Day {log.dayNumber}</h4>
+      <h4 className="font-semibold">Day {log?.dayNumber}</h4>
       <p className="text-xs text-muted-foreground font-semibold">
         {format(log.createdAt, "EEE, MMM d, yyyy")}
       </p>

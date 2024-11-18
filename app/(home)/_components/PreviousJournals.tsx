@@ -15,7 +15,7 @@ const PreviousJournals = () => {
     <div>
       <ScrollArea
         className={cn(
-          "h-[120px]",
+          "h-[120px] bg-card",
           journals.length === 1 && "h-[80px]",
           journals.length >= 3 && "h-[240px]"
         )}
