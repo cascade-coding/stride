@@ -12,7 +12,8 @@ const SidebarLogCard = ({ log }: { log: LogInfoType }) => {
   return (
     <div
       className="bg-gradient-to-r from-green-950 to-stone-900 border-2 border-green-800 mb-4 px-2 py-1 cursor-pointer"
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         dispatch(setShowLogId(log.id));
         router.push("/edit-log");
       }}

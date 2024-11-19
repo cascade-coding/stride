@@ -29,6 +29,7 @@ const LogEntryCard = ({ logId, entry }: LogEntryCardProps) => {
     addNewTagOnSubmit,
     newTagLoading,
     handleDeleteEntry,
+    removeTag,
   } = useSaveOrUpdateLogEntry({
     logId,
     entry,
@@ -105,6 +106,13 @@ const LogEntryCard = ({ logId, entry }: LogEntryCardProps) => {
                     </form>
                   </div>
 
+                  <SelectItem
+                    value="un"
+                    className="hover:!bg-transparent focus:bg-transparent"
+                  >
+                    uns
+                  </SelectItem>
+
                   {tags.length >= 1 ? (
                     tags.map((tag) => (
                       <div
@@ -121,7 +129,18 @@ const LogEntryCard = ({ logId, entry }: LogEntryCardProps) => {
                           <button className="flex-1 flex items-center justify-center">
                             <Pen className="w-3.5 h-3.5 my-auto hover:!text-amber-600 cursor-pointer" />
                           </button>
-                          <button className="flex-1 flex items-center justify-center">
+                          <button
+                            className="flex-1 flex items-center justify-center"
+                            onClick={async () => {
+                              await removeTag({
+                                tagId: tag.id,
+                                entry:
+                                  entry.tag && entry.tag.id === tag.id
+                                    ? entry
+                                    : null,
+                              });
+                            }}
+                          >
                             <Cross1Icon className="w-3.5 h-3.5 my-auto hover:!text-red-600 cursor-pointer" />
                           </button>
                         </div>
@@ -155,7 +174,7 @@ const LogEntryCard = ({ logId, entry }: LogEntryCardProps) => {
                 {inputs.rating >= 7 && (
                   <TrendingUp className="w-4 h-4 text-green-600" />
                 )}
-                {(inputs.rating >= 5 && inputs.rating <= 6) && (
+                {inputs.rating >= 5 && inputs.rating <= 6 && (
                   <MoveRight className="w-4 h-4 text-amber-600" />
                 )}
                 {inputs.rating < 5 && (

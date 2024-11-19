@@ -20,7 +20,9 @@ async function updateStatus({
   try {
     const authUser = await currentUser();
 
-    if (!authUser) return { errorMessage: "something went wrong" };
+    if (!authUser) {
+      return { errorMessage: "Authentication failed. User not found." };
+    }
 
     const user = await prisma.user.findFirst({
       where: {
@@ -28,7 +30,9 @@ async function updateStatus({
       },
     });
 
-    if (!user) return { errorMessage: "something went wrong" };
+    if (!user) {
+      return { errorMessage: "User does not exist." };
+    }
 
     const updatedLog = await prisma.log.update({
       where: {
@@ -77,7 +81,9 @@ async function createOrUpdateEntry(input: UpsertEntryInput) {
   try {
     const authUser = await currentUser();
 
-    if (!authUser) return { errorMessage: "something went wrong" };
+    if (!authUser) {
+      return { errorMessage: "Authentication failed. User not found." };
+    }
 
     const user = await prisma.user.findFirst({
       where: {
@@ -85,7 +91,9 @@ async function createOrUpdateEntry(input: UpsertEntryInput) {
       },
     });
 
-    if (!user) return { errorMessage: "something went wrong" };
+    if (!user) {
+      return { errorMessage: "User does not exist." };
+    }
 
     const {
       logId,
@@ -153,7 +161,9 @@ async function createNewTag(input: NewTagInput) {
   try {
     const authUser = await currentUser();
 
-    if (!authUser) return { errorMessage: "something went wrong" };
+    if (!authUser) {
+      return { errorMessage: "Authentication failed. User not found." };
+    }
 
     const user = await prisma.user.findFirst({
       where: {
@@ -178,6 +188,59 @@ async function createNewTag(input: NewTagInput) {
 
 /*
 
+! delete tags
+
+*/
+
+interface TagInput {
+  tagId: string;
+}
+
+async function deleteTag(input: TagInput) {
+  try {
+    const authUser = await currentUser();
+
+    if (!authUser) {
+      return { errorMessage: "Authentication failed. User not found." };
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        authId: authUser.id,
+      },
+    });
+
+    const { tagId } = input;
+
+    if (!user || !tagId) return { errorMessage: "something went wrong" };
+
+    const tag = await prisma.tag.findFirst({
+      where: {
+        id: tagId,
+        userId: user.id,
+      },
+    });
+
+    if (!tag) {
+      return {
+        errorMessage: "Tag not found or unAuthorized request.",
+      };
+    }
+
+    await prisma.tag.delete({
+      where: { id: tagId },
+    });
+
+    return { message: "Tag deleted successfully!" };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { errorMessage: "something went wrong" };
+  }
+}
+
+/*
+
 ! update log note content
 
 */
@@ -191,7 +254,9 @@ async function updateLogNoteContent(input: UpdateLogNoteInput) {
   try {
     const authUser = await currentUser();
 
-    if (!authUser) return { errorMessage: "something went wrong" };
+    if (!authUser) {
+      return { errorMessage: "Authentication failed. User not found." };
+    }
 
     const user = await prisma.user.findFirst({
       where: {
@@ -199,7 +264,9 @@ async function updateLogNoteContent(input: UpdateLogNoteInput) {
       },
     });
 
-    if (!user) return { errorMessage: "something went wrong" };
+    if (!user) {
+      return { errorMessage: "User does not exist." };
+    }
 
     const { logId, content } = input;
 
@@ -235,7 +302,9 @@ async function deleteEntryById(entryid: string) {
   try {
     const authUser = await currentUser();
 
-    if (!authUser) return { errorMessage: "something went wrong" };
+    if (!authUser) {
+      return { errorMessage: "Authentication failed. User not found." };
+    }
 
     const user = await prisma.user.findFirst({
       where: {
@@ -243,7 +312,9 @@ async function deleteEntryById(entryid: string) {
       },
     });
 
-    if (!user) return { errorMessage: "something went wrong" };
+    if (!user) {
+      return { errorMessage: "User does not exist." };
+    }
 
     await prisma.entry.delete({
       where: {
@@ -264,4 +335,5 @@ export {
   createNewTag,
   updateLogNoteContent,
   deleteEntryById,
+  deleteTag,
 };

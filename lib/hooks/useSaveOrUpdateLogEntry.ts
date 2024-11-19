@@ -6,12 +6,14 @@ import {
   createNewTag,
   createOrUpdateEntry,
   deleteEntryById,
+  deleteTag,
   updateLogNoteContent,
 } from "@/app/actions/log/edit";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   addTags,
   removeEntry,
+  removeTagItem,
   setEntryUpdating,
   updateEntry,
 } from "../features/log/logSlice";
@@ -146,6 +148,25 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
     deleteEntryById(entryId).then(() => console.log("entry deleted"));
   };
 
+  const removeTag = async ({
+    tagId,
+    entry = null,
+  }: {
+    tagId: string;
+    entry?: LogEntry | null;
+  }) => {
+    try {
+      dispatch(removeTagItem(tagId));
+      await deleteTag({ tagId });
+      
+      if (entry) dispatch(updateEntry({ ...entry, tag: null }));
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      console.log("some went wrong!");
+    }
+  };
+
   return {
     inputs,
     textareaRef,
@@ -156,6 +177,7 @@ function useSaveOrUpdateLogEntry({ logId, entry }: LogEntryCardProps) {
     newTagLoading,
     handleNoteContentChange,
     handleDeleteEntry,
+    removeTag,
   };
 }
 

@@ -27,7 +27,8 @@ const SidebarJournalCard = ({ journal }: { journal: JournalInfoType }) => {
       <div className="flex items-center justify-between">
         <div
           className="py-2 flex-1"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             dispatch(setShowJournalId(journal.id));
             router.push("/edit-journal");
           }}
