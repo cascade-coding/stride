@@ -21,6 +21,11 @@ const PreviousLogs = () => {
         )}
       >
         <div id="logs">
+          {logs.length === 0 && (
+            <p className="text-muted-foreground/80">
+              No previous logs yet, Edit Today's log.
+            </p>
+          )}
           {logs.map((log) => (
             <SidebarLogCard key={log.id} log={log} />
           ))}

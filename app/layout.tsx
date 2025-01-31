@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <ClerkProvider>
-        <html lang="en">
+        <html lang="en" className="note">
           <body className={`antialiased`}>
             <ThemeProvider
               attribute="class"

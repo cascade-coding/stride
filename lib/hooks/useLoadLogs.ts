@@ -22,7 +22,6 @@ function useLoadLogs() {
 
   const getLatestLog = async () => {
     const { today, now } = getDateTime();
-
     try {
       const log = await getOrCreateLog({ today, now });
 

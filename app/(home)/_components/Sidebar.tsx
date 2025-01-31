@@ -3,7 +3,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import SidebarContent from "./SidebarContent";
 import SidebarMenu from "@/components/shared/icons/SidebarMenu";
 import useInitialUserData from "@/lib/hooks/useInitialUserData";
@@ -26,6 +26,8 @@ const Sidebar = () => {
               <SidebarMenu />
             </button>
           </SheetTrigger>
+          <SheetTitle hidden></SheetTitle>
+          <SheetDescription hidden>The side bar</SheetDescription>
           <SheetContent side={"left"} className="px-0 pt-0">
             {logInitialLoading ? <SidebarSkeleton /> : <SidebarContent />}
           </SheetContent>

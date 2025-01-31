@@ -6,10 +6,16 @@ export const selectPreviousLogs = createSelector(
   (logs): LogInfoType[] => logs.filter((log) => log.latest !== true)
 );
 
+// export const selectPreviousJournals = createSelector(
+//   [
+//     (state: { journal: { journals: JournalInfoType[] } }) =>
+//       state.journal.journals,
+//   ],
+//   (journals): JournalInfoType[] => [...journals]
+// );
+
 export const selectPreviousJournals = createSelector(
-  [
-    (state: { journal: { journals: JournalInfoType[] } }) =>
-      state.journal.journals,
-  ],
-  (journals): JournalInfoType[] => [...journals]
+  (state: { journal: { journals: JournalInfoType[] } }) =>
+    state.journal.journals,
+  (journals): JournalInfoType[] => journals.filter((item) => !item.trashedAt)
 );
