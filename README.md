@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Strider App
+
+**Strider App** is a safe space to log and journal—built for the moments when things feel like they’re slowly going out of control. This Node.js application is containerized with Docker, making it easy to run anywhere without installing dependencies globally.
+
+---
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+* [Docker](https://www.docker.com/get-started) (version 20+ recommended)
+* [Docker Compose](https://docs.docker.com/compose/install/)
+
+---
 
 ## Getting Started
 
-First, run the development server:
+1. **Download the Project**
+
+* **Clone with Git**:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/cascade-coding/strider-app.git
+cd strider-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* **Or download the ZIP** from GitHub and extract it. Then navigate into the project folder:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd path/to/strider-app
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Start the app with Docker Compose**
 
-## Learn More
+```bash
+docker-compose up
+```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Open the app in your browser**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Go to [http://localhost:4000](http://localhost:4000)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> Changes you make to the code will automatically reload thanks to Docker volume mounting.
 
-## Deploy on Vercel
+4. **Stop the app**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Press `Ctrl+C` in the terminal and then run:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+docker-compose down
+```
+
+---
+
+## License
+
+[MIT](LICENSE)
+
